@@ -32,6 +32,8 @@ def record_current_answer(answer, current_question_id, session):
     '''
     Validates and stores the answer for the current question to django session.
     '''
+    if PYTHON_QUESTION_LIST[current_question_id]["question_text"] == answer:
+        session[current_question_id] = answer
     return True, ""
 
 
@@ -40,13 +42,20 @@ def get_next_question(current_question_id):
     Fetches the next question from the PYTHON_QUESTION_LIST based on the current_question_id.
     '''
 
-    return "dummy question", -1
-
+    if current_question_id > len(PYTHON_QUESTION_LIST):
+        return None,-1
+    else:
+        return PYTHON_QUESTION_LIST[current_question_id+1]["question_text"], current_question_id + 1
+    
 
 def generate_final_response(session):
     '''
     Creates a final result message including a score based on the answers
     by the user for questions in the PYTHON_QUESTION_LIST.
     '''
+    count = 0
+    for i in session.items():
+        if int(i[0]):
+            count += 1
 
-    return "dummy result"
+    return count
